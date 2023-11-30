@@ -3,6 +3,7 @@
 
 This Python script contains a class, `MonteCarloPi`, that uses a Monte Carlo simulation to estimate the value of Pi. The theory behind this method is based on the ratio of the areas of a circle and a square.
 
+#TEST
 ## Class Attributes
 
 - `radius`: The radius of the square in which the darts are being thrown
