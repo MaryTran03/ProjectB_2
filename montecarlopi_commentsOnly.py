@@ -9,9 +9,12 @@ Original file is located at
 
 #monteCarlopPi.py
 # import sys, random, and pandas modules
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 #class begins: MonteCarloPi()
-
+class MonteCarloPi:
     '''
       A class to store
 
@@ -24,6 +27,12 @@ Original file is located at
     '''
 
     # constructor w params, self, radius, num_it
+    def __init__(self, radius=1, num_it=100, num_darts_range=(100, 10000)):
+        self.radius = radius
+        self.length = 2 * radius
+        self.num_it = num_it
+        self.num_darts_range = num_darts_range
+        self.results_df = pd.DataFrame(columns=['Iteration', 'Throws', 'Hits', 'Pi Estimate'])
 
 
 
@@ -37,6 +46,9 @@ Original file is located at
           returns boolean for if the throw landed inside the circle
 
         '''
+    def throw_dart(self):
+        x, y = np.random.uniform(-self.radius, self.radius, 2)
+        return x**2 + y**2 <= self.radius**2
         # get a float between 1.0 and 10.0
 
         # if float is > 1.0 and < 7.85, dart landed inside the circle
@@ -57,7 +69,15 @@ Original file is located at
 
         # create a dataframe from throws_list
 
-        # return dataframe
+        # return dataframe (aarya made a change)
+    
+    def many_throws(self):
+        for iteration in range(1, self.num_it + 1):
+            num_darts = np.random.randint(*self.num_darts_range)
+            hits = sum(self.throw_dart() for _ in range(num_darts))
+            pi_estimate = 4 * hits / num_darts
+            self.results_df = self.results_df.append({'Iteration': iteration, 'Throws': num_darts, 'Hits': hits, 'Pi Estimate': pi_estimate}, ignore_index=True)
+
 
   # method summarize_results()
 
@@ -68,6 +88,8 @@ Original file is located at
 
         '''
         # return value_counts() of column in df
+    def summarize_results(self):
+        return self.results_df.describe()
 
   # method calc_pi() 
   # w param hit_results_df
@@ -79,4 +101,22 @@ Original file is located at
           pi = 4*hit_results_df[0]/(hit_results_df[0] + hit_results_df[1])
 
       '''
+    def calc_pi(self):
+        mean_pi = self.results_df['Pi Estimate'].mean()
+        std_error = self.results_df['Pi Estimate'].std() / np.sqrt(self.num_it)
+        return mean_pi, std_error
       # return pi
+    def visualize_simulation(self):
+        plt.scatter(self.results_df['Throws'], self.results_df['Pi Estimate'])
+        plt.xlabel('Number of Throws')
+        plt.ylabel('Pi Estimate')
+        plt.title('Monte Carlo Simulation of Pi')
+        plt.show()
+
+# Usage example
+monte_carlo_pi = MonteCarloPi()
+monte_carlo_pi.many_throws()
+print(monte_carlo_pi.summarize_results())
+mean_pi, std_error = monte_carlo_pi.calc_pi()
+print(f"Estimated Pi: {mean_pi} ± {std_error}")
+monte_carlo_pi.visualize_simulation()

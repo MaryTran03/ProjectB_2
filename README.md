@@ -1,5 +1,5 @@
 # group8-SDS-271
-# Monte Carlo Pi Estimation
+# Monte Carlo Pi Estimation test
 
 This Python script contains a class, `MonteCarloPi`, that uses a Monte Carlo simulation to estimate the value of Pi. The theory behind this method is based on the ratio of the areas of a circle and a square.
 
